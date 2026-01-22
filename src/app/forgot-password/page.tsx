@@ -1,12 +1,12 @@
 import { NavBar } from "@/components/layout/nav-bar";
-import { SignInForm } from "@/components/sign-in/sign-in-form";
+import { ForgotPasswordForm } from "@/components/forgot-password/forgot-password-form";
 
-export default function SignInPage() {
+export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <NavBar isAuthenticated={false} />
       <main className="flex flex-1 items-center justify-center p-4">
-        <SignInForm />
+        <ForgotPasswordForm />
       </main>
     </div>
   );

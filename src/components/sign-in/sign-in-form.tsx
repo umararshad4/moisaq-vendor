@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/cn";
+import Link from "next/link";
 
 export function SignInForm() {
   const {
@@ -95,12 +96,12 @@ export function SignInForm() {
               >
                 Password
               </Label>
-              <a
-                href="#"
+              <Link
+                href="/forgot-password"
                 className="text-xs font-medium text-[#27ae60] hover:underline"
               >
                 Forget password
-              </a>
+              </Link>
             </div>
             <Input
               id="password"

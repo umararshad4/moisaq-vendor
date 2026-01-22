@@ -1,4 +1,4 @@
-import EmptyDashboardIcon from "@/assets/dashboard/empty-dashboard";
+import EmptyDashboardIcon from "@/assets/empty-dashboard";
 
 export default function EmptyDashboard() {
   return (
