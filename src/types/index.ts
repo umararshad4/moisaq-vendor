@@ -50,6 +50,7 @@ export interface ErrorData {
   severity: Severity;
   rationale: string;
   comment?: string;
+  translatorFeedback?: string;
   isNew?: boolean;
 }
 
