@@ -20,6 +20,8 @@ export const SEGMENT_MOCK_DATA: Record<string, SegmentData> = {
           'The construction of the product name is incorrect. "Agilent InfinityLab LC Solutions" should translated as "Les solutions de LC Agilent InfinityLab". The word orde...',
         translatorFeedback:
           "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
+        reviewerFeedback:
+          "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
       },
     ],
   },
@@ -42,6 +44,8 @@ export const SEGMENT_MOCK_DATA: Record<string, SegmentData> = {
           'In technical and metrology contexts, "étalonner" is the correct standardized term in French. Using "calibrer" is considered less precise and does not comply with domain terminology guidelines.',
         translatorFeedback:
           "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
+        reviewerFeedback:
+          "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
       },
       {
         id: 2,
@@ -51,6 +55,8 @@ export const SEGMENT_MOCK_DATA: Record<string, SegmentData> = {
         rationale:
           'The construction of the product name is incorrect. "Agilent InfinityLab LC Solutions" should translated as "Les solutions de LC Agilent InfinityLab". The word order...',
         translatorFeedback:
+          "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
+        reviewerFeedback:
           "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
       },
     ],
@@ -73,6 +79,8 @@ export const SEGMENT_MOCK_DATA: Record<string, SegmentData> = {
         rationale:
           "The formal tone is inconsistent with the rest of the document. A more direct imperative form would be appropriate.",
         translatorFeedback:
+          "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
+        reviewerFeedback:
           "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
       },
     ],
@@ -106,6 +114,8 @@ export const SEGMENT_MOCK_DATA: Record<string, SegmentData> = {
         rationale:
           'In technical documentation, "maintenance" should be used instead of "entretien" for professional equipment to maintain consistency with industry standards.',
         translatorFeedback:
+          "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
+        reviewerFeedback:
           "The construction of the product name is incorrect. 'Agilent InfinityLab LC Solutions' should translated as 'Les solutions de LC Agilent InfinityLab'. The word 'série'.",
       },
     ],

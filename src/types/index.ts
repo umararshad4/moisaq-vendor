@@ -51,6 +51,7 @@ export interface ErrorData {
   rationale: string;
   comment?: string;
   translatorFeedback?: string;
+  reviewerFeedback?: string;
   isNew?: boolean;
 }
 
