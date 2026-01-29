@@ -64,6 +64,17 @@ export interface SegmentData {
   errors: ErrorData[];
 }
 
+export interface ContextRow {
+  index: number;
+  source: string;
+  target: string;
+}
+
+export interface TbMatchRow {
+  sourceTerm: string;
+  targetTerm: string;
+}
+
 export interface SegmentViewerProps {
   segmentId: string;
   roleName: RoleName;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
@@ -9,11 +10,17 @@ import {
   TOTAL_SEGMENTS,
   JOB_INFO,
 } from "@/constants/segment-data";
+import { FULL_CONTEXT_MOCK_DATA } from "@/constants/full-context-data";
+import { TB_MATCHES_MOCK_DATA } from "@/constants/tb-matches-data";
 import { SegmentContentLeft } from "./segment-content-left";
 import { SegmentErrorsRight } from "./segment-errors-right";
+import { FullContextSidebar } from "./full-context-sidebar";
+import { TbMatchesOverlay } from "./tb-matches-overlay";
 
 export function SegmentViewer({ segmentId, roleName }: SegmentViewerProps) {
   const router = useRouter();
+  const [contextSidebarOpen, setContextSidebarOpen] = useState(false);
+  const [tbMatchesOpen, setTbMatchesOpen] = useState(false);
   const segmentData = SEGMENT_MOCK_DATA[segmentId];
 
   if (!segmentData) {
@@ -62,10 +69,10 @@ export function SegmentViewer({ segmentId, roleName }: SegmentViewerProps) {
   };
 
   return (
-    <main className="min-h-screen bg-[#F3F4F8]">
-      <div className="flex flex-col">
+    <main className="flex h-screen flex-col overflow-hidden bg-[#F3F4F8]">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="sticky top-0 z-50 flex h-[68px] items-center justify-between border-b border-[#081F400F] bg-white px-5">
+        <header className="sticky top-0 z-50 flex h-[68px] shrink-0 items-center justify-between border-b border-[#081F400F] bg-white px-5">
           <div className="flex items-center gap-5">
             <Link
               href="/dashboard"
@@ -121,10 +128,18 @@ export function SegmentViewer({ segmentId, roleName }: SegmentViewerProps) {
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-3">
-                <button className="flex h-9 items-center justify-center rounded-lg border border-[#081F4008] bg-[#F7F8F9] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#081F40CC] transition-colors hover:bg-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setTbMatchesOpen(true)}
+                  className="flex h-9 items-center justify-center rounded-lg border border-[#081F4008] bg-[#F7F8F9] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#081F40CC] transition-colors hover:bg-gray-100"
+                >
                   TB
                 </button>
-                <button className="flex h-9 items-center justify-center rounded-lg border border-[#081F4008] bg-[#F7F8F9] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#081F40CC] transition-colors hover:bg-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setContextSidebarOpen(true)}
+                  className="flex h-9 items-center justify-center rounded-lg border border-[#081F4008] bg-[#F7F8F9] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#081F40CC] transition-colors hover:bg-gray-100"
+                >
                   Context
                 </button>
               </div>
@@ -135,16 +150,33 @@ export function SegmentViewer({ segmentId, roleName }: SegmentViewerProps) {
           </div>
         </header>
 
-        {/* Main Content: Left and Right Panels */}
-        <section className="grid gap-4 px-8 py-8 md:grid-cols-2">
-          <SegmentContentLeft
-            source={segmentData.source}
-            target={segmentData.target}
-            editedTarget={segmentData.editedTarget}
-            roleName={roleName}
+        {/* Content area: sidebar (when open) + main content – each scrolls separately, no whole-page scroll */}
+        <div className="flex min-h-0 flex-1 overflow-hidden">
+          <FullContextSidebar
+            open={contextSidebarOpen}
+            onClose={() => setContextSidebarOpen(false)}
+            currentSegmentNumber={segmentData.segmentNumber}
+            contextRows={FULL_CONTEXT_MOCK_DATA}
           />
-          <SegmentErrorsRight errors={segmentData.errors} roleName={roleName} />
-        </section>
+          <section className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-auto px-8 py-8 md:grid-cols-2">
+            <SegmentContentLeft
+              source={segmentData.source}
+              target={segmentData.target}
+              editedTarget={segmentData.editedTarget}
+              roleName={roleName}
+            />
+            <SegmentErrorsRight
+              errors={segmentData.errors}
+              roleName={roleName}
+            />
+          </section>
+        </div>
+
+        <TbMatchesOverlay
+          open={tbMatchesOpen}
+          onClose={() => setTbMatchesOpen(false)}
+          matches={TB_MATCHES_MOCK_DATA}
+        />
       </div>
     </main>
   );
