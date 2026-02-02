@@ -41,20 +41,19 @@ const ActiveJobs: React.FC<ActiveJobsProps> = ({ jobs = [] }) => {
             <CardContent className="flex flex-col gap-6 p-6">
               <div className="space-y-1.5">
                 <h3 className="text-base font-bold text-[#002244]">
-                  {job.title}
+                  {job.jobName}
                 </h3>
                 <p className="text-sm font-medium text-[#475467]">
-                  {job.sourceLang} &rarr; {job.targetLang} &middot; {job.type}
+                  {job.languages} &middot; {job.jobType}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <p className="text-sm font-medium text-[#475467]">
-                  {job.completedSegments} / {job.totalSegments} segments
-                  reviewed
+                  {job.segmentsReviewed} / {job.totalSegments} segments reviewed
                 </p>
                 <Progress
-                  value={(job.completedSegments / job.totalSegments) * 100}
+                  value={job.progressPercentage}
                   className="h-1.5 bg-[#F2F4F7]"
                   indicatorClassName="bg-[#002244]"
                 />

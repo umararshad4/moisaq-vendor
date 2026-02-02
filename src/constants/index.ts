@@ -41,3 +41,20 @@
  * export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
  * ```
  */
+
+/** Base path for API requests. Proxied to backend via proxy.ts when API_BACKEND_URL is set. */
+export const API_BASE_URL =
+  typeof window !== "undefined"
+    ? (process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api")
+    : (process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api");
+
+export const STORAGE_KEYS = {
+  AUTH_TOKEN: "auth_token",
+} as const;
+
+/** Cookie names for auth (used with cookies-next). */
+export const AUTH_COOKIE_KEYS = {
+  ACCESS: "auth_access",
+  REFRESH: "auth_refresh",
+  USER_INFO: "auth_user_info",
+} as const;

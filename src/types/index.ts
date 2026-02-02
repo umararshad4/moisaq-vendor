@@ -13,6 +13,27 @@ export type SignInValues = z.infer<typeof signInSchema>;
 export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
 
 /**
+ * Auth API Types (Login – aligned with /api/token/ response)
+ */
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginUserInfo {
+  email: string;
+  user_type: string;
+  role: string;
+  display_name: string;
+}
+
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+  user_info: LoginUserInfo;
+}
+
+/**
  * Component Props
  */
 export interface SetupPasswordFormProps {
@@ -28,12 +49,75 @@ export interface WorkspaceReadyProps {
  */
 export interface ActiveJob {
   id: string | number;
-  title: string;
+  jobName: string;
+  projectName: string;
+  languages: string;
   sourceLang: string;
   targetLang: string;
-  type: string;
-  completedSegments: number;
+  jobType: string;
+  stage: string;
+  segmentsReviewed: number;
   totalSegments: number;
+  progressPercentage: number;
+}
+
+export interface CompletedJob {
+  id: string | number;
+  project: string;
+  jobName: string;
+  languages: string;
+  sourceLang: string;
+  targetLang: string;
+  stage: string;
+  completedRole: string;
+  completedOn: string;
+}
+
+export interface CompletedJobSummaryStatistics {
+  segmentsReviewed: number;
+  finalErrors: number;
+  criticalErrors: number;
+  majorErrors: number;
+  minorErrors: number;
+}
+
+export interface CompletedJobSegmentErrorCounts {
+  critical: number;
+  major: number;
+  minor: number;
+}
+
+/** Single error from completed job segment (API: error_number, category, severity, rationale, comment). */
+export interface CompletedJobSegmentError {
+  id: number;
+  category: string;
+  severity: "Major" | "Minor" | "Critical";
+  rationale: string;
+  comment: string;
+}
+
+export interface CompletedJobSegment {
+  segmentId: string;
+  segmentOrder: number;
+  status: string;
+  previewText: string;
+  sourceText: string;
+  targetText: string;
+  updatedTargetText: string;
+  errorCounts: CompletedJobSegmentErrorCounts;
+  errors: CompletedJobSegmentError[];
+}
+
+export interface CompletedJobDetail {
+  id: string | number;
+  jobName: string;
+  projectName: string;
+  languages: string;
+  sourceLang: string;
+  targetLang: string;
+  status: string;
+  summaryStatistics: CompletedJobSummaryStatistics;
+  segments: CompletedJobSegment[];
 }
 
 /**

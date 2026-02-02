@@ -1,15 +1,23 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useZodForm } from "@/hooks/use-zod-form";
 import { signInSchema } from "@/utils/schema";
 import { SignInValues } from "@/types";
+import { login } from "@/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
+import type { AxiosError } from "axios";
 
 export function SignInForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -21,8 +29,25 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = (data: SignInValues) => {
-    console.log("Sign in submitted:", data);
+  const onSubmit = async (data: SignInValues) => {
+    setSubmitError(null);
+    setIsLoading(true);
+    try {
+      await login(data);
+      router.push("/dashboard");
+    } catch (err) {
+      const axiosError = err as AxiosError<{
+        message?: string;
+        error?: string;
+      }>;
+      const message =
+        axiosError.response?.data?.message ??
+        axiosError.response?.data?.error ??
+        "Sign in failed. Please check your email and password.";
+      setSubmitError(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -64,6 +89,14 @@ export function SignInForm() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {submitError && (
+            <p
+              role="alert"
+              className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+            >
+              {submitError}
+            </p>
+          )}
           <div className="space-y-2">
             <Label
               htmlFor="email"
@@ -122,9 +155,10 @@ export function SignInForm() {
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-xl bg-[#27ae60] text-base font-medium text-white shadow-none hover:bg-[#219150]"
+            disabled={isLoading}
+            className="h-12 w-full rounded-xl bg-[#27ae60] text-base font-medium text-white shadow-none hover:bg-[#219150] disabled:opacity-70"
           >
-            Sign In
+            {isLoading ? "Signing in…" : "Sign In"}
           </Button>
         </form>
       </div>

@@ -97,7 +97,7 @@ export function ExpandedSegmentContent({
                       Error {error.id}
                     </span>
                     <span className="inline-flex items-center rounded-full border border-[#D0D5DD] bg-[#F2F4F7] px-3 py-1 text-xs font-medium text-[#344054]">
-                      Upheld
+                      {error.severity}
                     </span>
                   </div>
                   <button className="flex h-6 w-6 items-center justify-center rounded-full border border-[#D0D5DD] bg-[#F2F4F7]">

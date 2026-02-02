@@ -16,219 +16,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-const COMPLETED_JOBS = [
-  {
-    id: "agilent-infinity-lab-lc-solutions-1",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-1",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-1",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-2",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-2",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-2",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-3",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-3",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-3",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-4",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-4",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-4",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-5",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-5",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-5",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-6",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-6",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-6",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-7",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-7",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-7",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-8",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-8",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-8",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-9",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-9",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-9",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-  {
-    id: "agilent-infinity-lab-lc-solutions-10",
-    project: "Agilent infinity lab LC solutions",
-    languages: "EN → FR",
-    stage: "Reviewer Validation",
-    completedOn: "Jan 9, 2026",
-  },
-  {
-    id: "waters-alliance-hplc-system-10",
-    project: "Waters alliance HPLC system",
-    languages: "EN → ES",
-    stage: "Final Review",
-    completedOn: "Jan 5, 2026",
-  },
-  {
-    id: "shimadzu-nexera-lc-system-guide-10",
-    project: "Shimadzu nexera LC system guide",
-    languages: "EN → IT",
-    stage: "Quality Review",
-    completedOn: "Dec 29, 2025",
-  },
-] as const;
+import { useCompletedJobs } from "@/hooks/use-completed-jobs";
+import type { CompletedJob } from "@/types";
 
 const JOBS_PER_PAGE = 10;
 
@@ -236,18 +25,24 @@ export default function CompletedJobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const totalPages = Math.ceil(COMPLETED_JOBS.length / JOBS_PER_PAGE);
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useCompletedJobs(currentPage);
 
-  // Get jobs for current page first
-  const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
-  const pageJobs = COMPLETED_JOBS.slice(startIndex, startIndex + JOBS_PER_PAGE);
+  const jobs = response?.results ?? [];
+  const totalCount = response?.count ?? 0;
+  const totalPages = Math.ceil(totalCount / JOBS_PER_PAGE);
 
-  // Filter only the current page jobs based on search query
-  const currentJobs = pageJobs.filter((job) => {
+  // Filter jobs based on search query
+  const filteredJobs = jobs.filter((job) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
     return (
       job.project.toLowerCase().includes(query) ||
+      job.jobName.toLowerCase().includes(query) ||
       job.languages.toLowerCase().includes(query) ||
       job.stage.toLowerCase().includes(query) ||
       job.completedOn.toLowerCase().includes(query)
@@ -259,6 +54,34 @@ export default function CompletedJobs() {
       setCurrentPage(page);
     }
   };
+
+  if (isLoading) {
+    return (
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-bold text-[#101828]">Completed Jobs</h2>
+        </div>
+        <div className="rounded-2xl border border-[#EAECF0] bg-white px-6 py-12 text-center text-sm text-[#667085]">
+          Loading completed jobs…
+        </div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-bold text-[#101828]">Completed Jobs</h2>
+        </div>
+        <div className="rounded-2xl border border-[#EAECF0] bg-white px-6 py-12 text-center text-sm text-red-600">
+          {error instanceof Error
+            ? error.message
+            : "Failed to load completed jobs"}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-4">
@@ -282,8 +105,8 @@ export default function CompletedJobs() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-[#EAECF0] bg-white pb-6">
-        <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,1fr)_minmax(0,2fr)_minmax(0,1.5fr)_auto] border-b border-[#EAECF0] bg-[#F9FAFB] px-6 py-3 text-xs font-semibold tracking-wide text-[#667085] uppercase">
-          <div>Project</div>
+        <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1.5fr)_auto] border-b border-[#EAECF0] bg-[#F9FAFB] px-6 py-3 text-xs font-semibold tracking-wide text-[#667085] uppercase">
+          <div>Job Name</div>
           <div>Languages</div>
           <div>Stage</div>
           <div>Completed on</div>
@@ -291,12 +114,12 @@ export default function CompletedJobs() {
         </div>
 
         <div className="divide-y divide-[#EAECF0] text-sm text-[#101828]">
-          {currentJobs.length > 0 ? (
-            currentJobs.map((job) => (
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => (
               <CompletedJobsRow
                 key={job.id}
                 id={job.id}
-                project={job.project}
+                jobName={job.jobName}
                 languages={job.languages}
                 stage={job.stage}
                 completedOn={job.completedOn}
@@ -359,8 +182,8 @@ export default function CompletedJobs() {
 }
 
 type CompletedJobsRowProps = {
-  id: string;
-  project: string;
+  id: string | number;
+  jobName: string;
   languages: string;
   stage: string;
   completedOn: string;
@@ -368,15 +191,15 @@ type CompletedJobsRowProps = {
 
 function CompletedJobsRow({
   id,
-  project,
+  jobName,
   languages,
   stage,
   completedOn,
 }: CompletedJobsRowProps) {
   return (
-    <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,1fr)_minmax(0,2fr)_minmax(0,1.5fr)_auto] items-center px-6 py-4">
+    <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1.5fr)_auto] items-center px-6 py-4">
       <div className="pr-4">
-        <p className="font-medium text-[#101828]">{project}</p>
+        <p className="font-medium text-[#101828]">{jobName}</p>
       </div>
       <div className="text-[#667085]">{languages}</div>
       <div className="text-[#667085]">{stage}</div>

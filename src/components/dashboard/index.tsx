@@ -1,88 +1,39 @@
+"use client";
+
 import ActiveJobs from "@/components/dashboard/active-jobs";
 import CompletedJobs from "@/components/dashboard/completed-jobs";
 import EmptyDashboard from "@/components/dashboard/empty-dashboard";
-import NewJobAlert, { NewJob } from "@/components/dashboard/new-job-alert";
-import { ActiveJob } from "@/types";
-
-const MOCK_NEW_JOBS: NewJob[] = [
-  {
-    id: "new-1",
-    title: "Agilent InfinityLab LC Solutions",
-    sourceLang: "EN",
-    targetLang: "FR",
-    stage: "Reviewer Validation",
-    segments: 42,
-  },
-  {
-    id: "new-2",
-    title: "Shimadzu Nexera LC System Guide",
-    sourceLang: "EN",
-    targetLang: "IT",
-    stage: "Translation Review",
-    segments: 58,
-  },
-  {
-    id: "new-3",
-    title: "Waters Alliance HPLC System",
-    sourceLang: "EN",
-    targetLang: "ES",
-    stage: "Quality Review",
-    segments: 35,
-  },
-  {
-    id: "new-4",
-    title: "Thermo Scientific Mass Spectrometry Manual",
-    sourceLang: "EN",
-    targetLang: "DE",
-    stage: "Final Validation",
-    segments: 67,
-  },
-  {
-    id: "new-5",
-    title: "PerkinElmer HPLC User Guide",
-    sourceLang: "EN",
-    targetLang: "JA",
-    stage: "Reviewer Reconciliation",
-    segments: 49,
-  },
-];
-
-const MOCK_ACTIVE_JOBS: ActiveJob[] = [
-  {
-    id: 1,
-    title: "HPLC System User Manual",
-    sourceLang: "EN",
-    targetLang: "DE",
-    type: "Quality Review",
-    completedSegments: 56,
-    totalSegments: 128,
-  },
-  {
-    id: 2,
-    title: "LC-MS Technical Documentation",
-    sourceLang: "EN",
-    targetLang: "JA",
-    type: "Translation Review",
-    completedSegments: 12,
-    totalSegments: 94,
-  },
-  {
-    id: 3,
-    title: "Thermo Scientific HPLC User Manual",
-    sourceLang: "EN",
-    targetLang: "ZH",
-    type: "Final Validation",
-    completedSegments: 88,
-    totalSegments: 105,
-  },
-];
+import NewJobAlert from "@/components/dashboard/new-job-alert";
+import { useActiveJobs } from "@/hooks/use-active-jobs";
+import { useNotifications } from "@/hooks/use-notifications";
 
 export default function Dashboard() {
-  // TODO: Replace these with real data checks.
-  const hasActiveJobs = MOCK_ACTIVE_JOBS.length > 0;
-  const hasCompletedJobs = true;
+  const { data: activeJobs = [], isLoading, isError, error } = useActiveJobs();
+  const { data: notifications = [] } = useNotifications();
 
-  if (!hasActiveJobs && !hasCompletedJobs) {
+  const hasActiveJobs = activeJobs.length > 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white px-8 py-10">
+        <p className="text-sm text-[#475467]">Loading dashboard…</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white px-8 py-10">
+        <p className="text-sm text-red-600">
+          {error instanceof Error
+            ? error.message
+            : "Failed to load active jobs"}
+        </p>
+      </div>
+    );
+  }
+
+  if (!hasActiveJobs) {
     return (
       <div className="flex min-h-screen justify-center bg-white px-8 py-10">
         <EmptyDashboard />
@@ -92,9 +43,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white px-8 py-10">
-      <NewJobAlert jobs={MOCK_NEW_JOBS} />
+      <NewJobAlert jobs={notifications} />
       <div className="w-full space-y-8">
-        <ActiveJobs jobs={MOCK_ACTIVE_JOBS} />
+        <ActiveJobs jobs={activeJobs} />
         <CompletedJobs />
       </div>
     </div>
