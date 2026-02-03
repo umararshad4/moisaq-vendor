@@ -8,6 +8,7 @@ export interface TbMatchesOverlayProps {
   open: boolean;
   onClose: () => void;
   matches?: TbMatchRow[];
+  isLoading?: boolean;
 }
 
 const DEFAULT_MATCHES: TbMatchRow[] = [];
@@ -16,12 +17,12 @@ export function TbMatchesOverlay({
   open,
   onClose,
   matches = DEFAULT_MATCHES,
+  isLoading = false,
 }: TbMatchesOverlayProps) {
   if (!open) return null;
 
   return (
     <>
-      {/* Backdrop – optional subtle dim, or omit for overlay-only */}
       <div
         className="fixed inset-0 z-40 bg-[#081F4008]"
         aria-hidden
@@ -37,7 +38,6 @@ export function TbMatchesOverlay({
         aria-label="TB Matches"
         aria-labelledby="tb-matches-title"
       >
-        {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-[#081F4014] px-5 py-4">
           <h2
             id="tb-matches-title"
@@ -55,40 +55,55 @@ export function TbMatchesOverlay({
           </button>
         </div>
 
-        {/* Table */}
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="overflow-auto px-5 py-4">
-            <table className="w-full border-collapse text-left">
-              <thead className="sticky top-0 z-10 bg-white">
-                <tr>
-                  <th className="border-r border-b border-[#081F4014] px-4 py-3 text-[11px] font-semibold tracking-wider text-[#081F40B2] uppercase">
-                    SOURCE TERM
-                  </th>
-                  <th className="border-b border-[#081F4014] px-4 py-3 text-[11px] font-semibold tracking-wider text-[#081F40B2] uppercase">
-                    TARGET TERM
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {matches.map((row, index) => (
-                  <tr
-                    key={`${row.sourceTerm}-${index}`}
-                    className="border-b border-[#081F400D] last:border-b-0"
+            {isLoading ? (
+              <div className="space-y-3 py-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 border-b border-[#081F400D] pb-3 last:border-b-0"
                   >
-                    <td className="border-r border-[#081F4014] px-4 py-3 text-[13px] font-semibold text-[#081F40]">
-                      {row.sourceTerm}
-                    </td>
-                    <td className="px-4 py-3 text-[13px] leading-relaxed font-normal text-[#081F40]">
-                      {row.targetTerm}
-                    </td>
-                  </tr>
+                    <div className="h-5 w-24 animate-pulse rounded bg-[#081F4014]" />
+                    <div className="h-5 flex-1 animate-pulse rounded bg-[#081F4014]" />
+                  </div>
                 ))}
-              </tbody>
-            </table>
-            {matches.length === 0 && (
-              <div className="py-8 text-center text-[13px] text-[#081F4080]">
-                No term base matches for this segment.
               </div>
+            ) : (
+              <>
+                <table className="w-full border-collapse text-left">
+                  <thead className="sticky top-0 z-10 bg-white">
+                    <tr>
+                      <th className="border-r border-b border-[#081F4014] px-4 py-3 text-[11px] font-semibold tracking-wider text-[#081F40B2] uppercase">
+                        SOURCE TERM
+                      </th>
+                      <th className="border-b border-[#081F4014] px-4 py-3 text-[11px] font-semibold tracking-wider text-[#081F40B2] uppercase">
+                        TARGET TERM
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matches.map((row, index) => (
+                      <tr
+                        key={`${row.sourceTerm}-${index}`}
+                        className="border-b border-[#081F400D] last:border-b-0"
+                      >
+                        <td className="border-r border-[#081F4014] px-4 py-3 text-[13px] font-semibold text-[#081F40]">
+                          {row.sourceTerm}
+                        </td>
+                        <td className="px-4 py-3 text-[13px] leading-relaxed font-normal text-[#081F40]">
+                          {row.targetTerm}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {matches.length === 0 && (
+                  <div className="py-8 text-center text-[13px] text-[#081F4080]">
+                    No term base matches for this segment.
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

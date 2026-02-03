@@ -1,9 +1,21 @@
 import React from "react";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ActiveJob } from "@/types";
+import { RoleName } from "@/types";
 import EmptyDashboardIcon from "@/assets/empty-dashboard";
+
+/** Maps job stage to segment viewer role. */
+function stageToRole(stage: string): RoleName {
+  const s = stage.toLowerCase().replace(/\s+/g, "_");
+  if (s.includes("arbitrat")) return "arbitrator";
+  if (s.includes("reconcil") || s.includes("reviewer2") || s.includes("second"))
+    return "reviewer2";
+  if (s.includes("translat")) return "translator";
+  return "reviewer1";
+}
 
 interface ActiveJobsProps {
   jobs?: ActiveJob[];
@@ -59,8 +71,13 @@ const ActiveJobs: React.FC<ActiveJobsProps> = ({ jobs = [] }) => {
                 />
               </div>
 
-              <Button className="h-12 w-full rounded-lg bg-[#1FAA73] text-base font-semibold text-white transition-colors hover:bg-[#1B9663]">
-                Continue
+              <Button
+                asChild
+                className="h-12 w-full rounded-lg bg-[#1FAA73] text-base font-semibold text-white transition-colors hover:bg-[#1B9663]"
+              >
+                <Link href={`/job/${stageToRole(job.stage)}/segment/${job.id}`}>
+                  Continue
+                </Link>
               </Button>
             </CardContent>
           </Card>

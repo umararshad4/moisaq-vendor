@@ -160,8 +160,9 @@ export interface TbMatchRow {
 }
 
 export interface SegmentViewerProps {
-  segmentId: string;
+  jobId: string;
   roleName: RoleName;
+  initialSegmentOrder?: number;
 }
 
 export interface SegmentContentLeftProps {

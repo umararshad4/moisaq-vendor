@@ -38,3 +38,6 @@ export {
   getCompletedJobDetail,
 } from "./completed-jobs-service";
 export { getNotifications, acceptNotification } from "./notifications-service";
+export { getFirstReviews } from "./first-reviews-service";
+export { getTermBaseMatches } from "./term-base-service";
+export { getFileData } from "./file-data-service";

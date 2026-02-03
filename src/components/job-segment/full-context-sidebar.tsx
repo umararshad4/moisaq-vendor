@@ -11,6 +11,8 @@ export interface FullContextSidebarProps {
   onClose: () => void;
   currentSegmentNumber: number;
   contextRows?: ContextRow[];
+  isLoading?: boolean;
+  onSegmentClick?: (segmentOrder: number) => void;
 }
 
 const DEFAULT_CONTEXT_ROWS: ContextRow[] = [];
@@ -20,6 +22,8 @@ export function FullContextSidebar({
   onClose,
   currentSegmentNumber,
   contextRows = DEFAULT_CONTEXT_ROWS,
+  isLoading = false,
+  onSegmentClick,
 }: FullContextSidebarProps) {
   const [searchSource, setSearchSource] = useState("");
   const [searchTarget, setSearchTarget] = useState("");
@@ -88,48 +92,77 @@ export function FullContextSidebar({
       {/* Table */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className="overflow-auto px-5 pb-5">
-          <table className="w-full border-collapse text-left">
-            <thead className="sticky top-0 z-10 bg-[#F7F8F9]">
-              <tr>
-                <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
-                  #
-                </th>
-                <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
-                  Source
-                </th>
-                <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
-                  Target
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRows.map((row) => {
-                const isActive = row.index === currentSegmentNumber;
-                return (
-                  <tr
-                    key={row.index}
-                    className={cn(
-                      "border-b border-[#081F4008] transition-colors",
-                      isActive && "border-l-4 border-l-[#1FAA73] bg-[#E8F5E9]"
-                    )}
-                  >
-                    <td className="px-3 py-2.5 text-[12px] font-medium whitespace-nowrap text-[#081F40]">
-                      {row.index}
-                    </td>
-                    <td className="px-3 py-2.5 text-[12px] leading-relaxed text-[#081F40]">
-                      {row.source}
-                    </td>
-                    <td className="px-3 py-2.5 text-[12px] leading-relaxed text-[#081F40]">
-                      {row.target}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          {filteredRows.length === 0 && (
+          {isLoading ? (
+            <div className="space-y-2 py-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="flex gap-3 border-b border-[#081F4008] pb-2"
+                >
+                  <div className="h-4 w-6 animate-pulse rounded bg-[#081F4014]" />
+                  <div className="h-4 flex-1 animate-pulse rounded bg-[#081F4014]" />
+                  <div className="h-4 flex-1 animate-pulse rounded bg-[#081F4014]" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <table className="w-full border-collapse text-left">
+              <thead className="sticky top-0 z-10 bg-[#F7F8F9]">
+                <tr>
+                  <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
+                    #
+                  </th>
+                  <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
+                    Source
+                  </th>
+                  <th className="border-b border-[#081F4014] px-3 py-2.5 text-[12px] font-semibold text-[#081F40]">
+                    Target
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRows.map((row) => {
+                  const isActive = row.index === currentSegmentNumber;
+                  return (
+                    <tr
+                      key={row.index}
+                      role={onSegmentClick ? "button" : undefined}
+                      tabIndex={onSegmentClick ? 0 : undefined}
+                      onClick={() => onSegmentClick?.(row.index)}
+                      onKeyDown={(e) => {
+                        if (!onSegmentClick) return;
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onSegmentClick(row.index);
+                        }
+                      }}
+                      className={cn(
+                        "border-b border-[#081F4008] transition-colors",
+                        isActive &&
+                          "border-l-4 border-l-[#1FAA73] bg-[#E8F5E9]",
+                        onSegmentClick && "cursor-pointer hover:bg-[#081F4008]"
+                      )}
+                    >
+                      <td className="px-3 py-2.5 text-[12px] font-medium whitespace-nowrap text-[#081F40]">
+                        {row.index}
+                      </td>
+                      <td className="px-3 py-2.5 text-[12px] leading-relaxed text-[#081F40]">
+                        {row.source}
+                      </td>
+                      <td className="px-3 py-2.5 text-[12px] leading-relaxed text-[#081F40]">
+                        {row.target}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+          {!isLoading && filteredRows.length === 0 && (
             <div className="py-8 text-center text-[13px] text-[#081F4080]">
-              No segments match your search.
+              {contextRows.length === 0
+                ? "No segments found."
+                : "No segments match your search."}
             </div>
           )}
         </div>

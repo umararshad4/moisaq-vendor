@@ -133,6 +133,20 @@ const SEVERITY_OPTIONS = [
   { value: "critical", label: "Critical" },
 ];
 
+/** Find option value from category + subcategory (e.g. for API-sourced errors). */
+function getOptionValueFromCategorySubcategory(
+  category: string,
+  subcategory: string
+): string {
+  for (const group of CATEGORY_OPTIONS) {
+    const item = group.items.find(
+      (i) => i.category === category && i.subcategory === subcategory
+    );
+    if (item) return item.value;
+  }
+  return "";
+}
+
 interface ErrorCardReviewer1Props extends ErrorCardProps {
   isAddMode?: boolean;
   onSaveNew?: (error: ErrorData) => void;
@@ -149,11 +163,17 @@ export function ErrorCardReviewer1({
   onCancelNew,
 }: ErrorCardReviewer1Props) {
   const [isEditing, setIsEditing] = useState(isAddMode);
-  const [category, setCategory] = useState(
-    error.category && error.subcategory
-      ? `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-")}`
-      : ""
-  );
+  const [category, setCategory] = useState(() => {
+    const fromOptions = getOptionValueFromCategorySubcategory(
+      error.category,
+      error.subcategory
+    );
+    if (fromOptions) return fromOptions;
+    if (error.category && error.subcategory) {
+      return `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-").replace(/\//g, "")}`;
+    }
+    return "";
+  });
   const [severity, setSeverity] = useState(error.severity.toLowerCase());
   const [rationale, setRationale] = useState(error.rationale);
 
@@ -162,9 +182,11 @@ export function ErrorCardReviewer1({
       const item = group.items.find((i) => i.value === category);
       if (item) return `${item.category} / ${item.subcategory}`;
     }
-    return error.category && error.subcategory
-      ? `${error.category} / ${error.subcategory}`
-      : "";
+    if (error.category && error.subcategory) {
+      return `${error.category} / ${error.subcategory}`;
+    }
+    if (error.category) return error.category;
+    return "";
   };
 
   const getCategoryFromValue = (value: string) => {
@@ -180,10 +202,15 @@ export function ErrorCardReviewer1({
     if (isAddMode && onCancelNew) {
       onCancelNew();
     } else {
+      const fromOptions = getOptionValueFromCategorySubcategory(
+        error.category,
+        error.subcategory
+      );
       setCategory(
-        error.category && error.subcategory
-          ? `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-")}`
-          : ""
+        fromOptions ||
+          (error.category && error.subcategory
+            ? `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-").replace(/\//g, "")}`
+            : "")
       );
       setSeverity(error.severity.toLowerCase());
       setRationale(error.rationale);
