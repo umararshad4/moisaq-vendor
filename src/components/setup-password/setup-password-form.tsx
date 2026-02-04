@@ -1,23 +1,46 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useZodForm } from "@/hooks/use-zod-form";
+import { useSetupPassword } from "@/hooks/use-setup-password";
 import { setupPasswordSchema } from "@/utils/schema";
 import { SetupPasswordFormProps, SetupPasswordValues } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/cn";
+import { toast } from "sonner";
 
 export function SetupPasswordForm({ onSuccess }: SetupPasswordFormProps) {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useZodForm(setupPasswordSchema);
 
-  const onSubmit = (data: SetupPasswordValues) => {
-    console.log("Form submitted:", data);
-    if (onSuccess) onSuccess();
+  const setupPasswordMutation = useSetupPassword({
+    onSuccess: () => {
+      if (onSuccess) onSuccess();
+    },
+  });
+
+  const onSubmit = async (data: SetupPasswordValues) => {
+    if (!token) {
+      toast.error("Invalid invitation link", {
+        description: "Please check your invitation email and try again.",
+        duration: 4000,
+      });
+      return;
+    }
+
+    await setupPasswordMutation.mutateAsync({
+      token,
+      password: data.password,
+      password_confirm: data.confirmPassword,
+    });
   };
 
   return (
@@ -31,6 +54,13 @@ export function SetupPasswordForm({ onSuccess }: SetupPasswordFormProps) {
         </p>
       </div>
 
+      {!token && (
+        <div className="rounded-lg bg-amber-50 p-4 text-sm text-amber-600">
+          Invalid or missing invitation token. Please check your invitation
+          email and try again.
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-2">
           <Label
@@ -42,6 +72,7 @@ export function SetupPasswordForm({ onSuccess }: SetupPasswordFormProps) {
           <Input
             id="password"
             type="password"
+            placeholder="Enter your password"
             aria-invalid={!!errors.password}
             {...register("password")}
             className={cn(
@@ -66,6 +97,7 @@ export function SetupPasswordForm({ onSuccess }: SetupPasswordFormProps) {
           <Input
             id="confirmPassword"
             type="password"
+            placeholder="Confirm your password"
             aria-invalid={!!errors.confirmPassword}
             {...register("confirmPassword")}
             className={cn(
@@ -84,9 +116,10 @@ export function SetupPasswordForm({ onSuccess }: SetupPasswordFormProps) {
 
         <Button
           type="submit"
-          className="h-12 w-full rounded-xl bg-[#27ae60] text-lg font-semibold text-white shadow-none hover:bg-[#219150]"
+          disabled={!token || setupPasswordMutation.isPending}
+          className="h-12 w-full rounded-xl bg-[#27ae60] text-lg font-semibold text-white shadow-none hover:bg-[#219150] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Create Account
+          {setupPasswordMutation.isPending ? "Setting up..." : "Create Account"}
         </Button>
       </form>
 

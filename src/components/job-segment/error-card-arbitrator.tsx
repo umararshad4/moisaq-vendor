@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, MessageSquare, Plus } from "lucide-react";
 import { ErrorCardProps } from "@/types";
 import { Textarea } from "@/components/ui/textarea";
@@ -135,6 +135,7 @@ const SEVERITY_OPTIONS = [
 
 export function ErrorCardArbitrator({
   error,
+  currentAction,
   onEdit,
   onMarkResolved,
   onIgnoreFeedback,
@@ -144,6 +145,9 @@ export function ErrorCardArbitrator({
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [comment, setComment] = useState(error.comment ?? "");
   const [hasComment, setHasComment] = useState(Boolean(error.comment));
+  const [selectedAction, setSelectedAction] = useState<
+    "uphold-reviewer" | "uphold-translator" | null
+  >(null);
 
   const [category, setCategory] = useState(
     `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory
@@ -152,6 +156,29 @@ export function ErrorCardArbitrator({
   );
   const [severity, setSeverity] = useState(error.severity.toLowerCase());
   const [rationale, setRationale] = useState(error.rationale);
+
+  // Reset state when error changes (e.g., navigating to a new segment)
+  useEffect(() => {
+    setComment(error.comment ?? "");
+    setHasComment(Boolean(error.comment));
+    setIsAddingComment(false);
+    setIsEditingError(false);
+    setCategory(
+      `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory
+        .toLowerCase()
+        .replace(/\s+/g, "-")}`
+    );
+    setSeverity(error.severity.toLowerCase());
+    setRationale(error.rationale);
+    // Initialize selectedAction from currentAction prop
+    if (currentAction === "accept") {
+      setSelectedAction("uphold-reviewer");
+    } else if (currentAction === "reject") {
+      setSelectedAction("uphold-translator");
+    } else {
+      setSelectedAction(null);
+    }
+  }, [error.id, error.comment, error.category, error.subcategory, error.severity, error.rationale, currentAction]);
 
   const getCurrentCategoryLabel = () => {
     for (const group of CATEGORY_OPTIONS) {
@@ -189,13 +216,23 @@ export function ErrorCardArbitrator({
     if (comment.trim()) {
       setHasComment(true);
       setIsAddingComment(false);
-      onAddComment?.();
+      onAddComment?.(comment.trim());
     }
   };
 
   const handleRemoveComment = () => {
     setComment("");
     setHasComment(false);
+  };
+
+  const handleUpholdReviewer = () => {
+    setSelectedAction("uphold-reviewer");
+    onMarkResolved?.();
+  };
+
+  const handleUpholdTranslator = () => {
+    setSelectedAction("uphold-translator");
+    onIgnoreFeedback?.();
   };
 
   return (
@@ -389,16 +426,26 @@ export function ErrorCardArbitrator({
                 Edit
               </button>
               <button
-                onClick={onMarkResolved}
-                className="flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F]"
+                onClick={handleUpholdReviewer}
+                disabled={selectedAction === "uphold-reviewer"}
+                className={`flex h-[34px] items-center rounded-lg px-3.5 text-[13px] font-medium tracking-[0.03em] transition-colors ${
+                  selectedAction === "uphold-reviewer"
+                    ? "cursor-not-allowed bg-[#1FAA73] text-white opacity-60"
+                    : "bg-[#1FAA73] text-white hover:bg-[#19925F]"
+                }`}
               >
-                Uphold Reviewer
+                {selectedAction === "uphold-reviewer" ? "Upheld Reviewer" : "Uphold Reviewer"}
               </button>
               <button
-                onClick={onIgnoreFeedback}
-                className="flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F]"
+                onClick={handleUpholdTranslator}
+                disabled={selectedAction === "uphold-translator"}
+                className={`flex h-[34px] items-center rounded-lg px-3.5 text-[13px] font-medium tracking-[0.03em] transition-colors ${
+                  selectedAction === "uphold-translator"
+                    ? "cursor-not-allowed bg-[#1FAA73] text-white opacity-60"
+                    : "bg-[#1FAA73] text-white hover:bg-[#19925F]"
+                }`}
               >
-                Uphold Translator
+                {selectedAction === "uphold-translator" ? "Upheld Translator" : "Uphold Translator"}
               </button>
               <button
                 onClick={handleRemoveComment}
@@ -417,16 +464,26 @@ export function ErrorCardArbitrator({
                 Edit
               </button>
               <button
-                onClick={onMarkResolved}
-                className="flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F]"
+                onClick={handleUpholdReviewer}
+                disabled={selectedAction === "uphold-reviewer"}
+                className={`flex h-[34px] items-center rounded-lg px-3.5 text-[13px] font-medium tracking-[0.03em] transition-colors ${
+                  selectedAction === "uphold-reviewer"
+                    ? "cursor-not-allowed bg-[#1FAA73] text-white opacity-60"
+                    : "bg-[#1FAA73] text-white hover:bg-[#19925F]"
+                }`}
               >
-                Uphold Reviewer
+                {selectedAction === "uphold-reviewer" ? "Upheld Reviewer" : "Uphold Reviewer"}
               </button>
               <button
-                onClick={onIgnoreFeedback}
-                className="flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F]"
+                onClick={handleUpholdTranslator}
+                disabled={selectedAction === "uphold-translator"}
+                className={`flex h-[34px] items-center rounded-lg px-3.5 text-[13px] font-medium tracking-[0.03em] transition-colors ${
+                  selectedAction === "uphold-translator"
+                    ? "cursor-not-allowed bg-[#1FAA73] text-white opacity-60"
+                    : "bg-[#1FAA73] text-white hover:bg-[#19925F]"
+                }`}
               >
-                Uphold Translator
+                {selectedAction === "uphold-translator" ? "Upheld Translator" : "Uphold Translator"}
               </button>
               <button
                 onClick={() => setIsAddingComment(true)}

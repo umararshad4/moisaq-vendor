@@ -11,6 +11,7 @@ export function SegmentContentLeft({
   target,
   editedTarget,
   roleName,
+  onEditedTargetChange,
 }: SegmentContentLeftProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
@@ -29,7 +30,10 @@ export function SegmentContentLeft({
   };
 
   const handleSave = () => {
-    // Save logic could go here if needed
+    // Notify parent of edited target change
+    if (onEditedTargetChange && content !== editedTarget) {
+      onEditedTargetChange(content);
+    }
     setIsEditing(false);
   };
 

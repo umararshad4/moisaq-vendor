@@ -34,6 +34,41 @@ export interface LoginResponse {
 }
 
 /**
+ * Setup Password API Types
+ */
+export interface SetupPasswordRequest {
+  token: string;
+  password: string;
+  password_confirm: string;
+}
+
+export interface RegularUserInfo {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+}
+
+export interface ClientUserInfo {
+  id: number;
+  email: string;
+  client_name: string;
+  name: string;
+}
+
+export interface SetupPasswordResponseRegular {
+  message: string;
+  user: RegularUserInfo;
+}
+
+export interface SetupPasswordResponseClient {
+  message: string;
+  user: ClientUserInfo;
+  activated_at: string;
+}
+
+/**
  * Component Props
  */
 export interface SetupPasswordFormProps {
@@ -94,6 +129,14 @@ export interface CompletedJobSegmentError {
   severity: "Major" | "Minor" | "Critical";
   rationale: string;
   comment: string;
+  firstReviewAction?: string | null;
+  firstReviewRationale?: string | null;
+  translatorAction?: string | null;
+  translatorComment?: string | null;
+  reviewer2Action?: string | null;
+  reviewer2Comment?: string | null;
+  arbitratorAction?: string | null;
+  arbitratorComment?: string | null;
 }
 
 export interface CompletedJobSegment {
@@ -170,13 +213,22 @@ export interface SegmentContentLeftProps {
   target: string;
   editedTarget: string;
   roleName: RoleName;
+  onEditedTargetChange?: (text: string) => void;
 }
 
 export interface SegmentErrorsRightProps {
   errors: ErrorData[];
   roleName: RoleName;
+  errorActions?: Record<number, "accept" | "reject" | "pending">;
   onAddError?: () => void;
-  onEditError?: (errorId: number) => void;
+  onEditError?: (
+    errorId: number,
+    updates: {
+      category?: string;
+      severity?: string;
+      rationale?: string;
+    }
+  ) => void;
   onDeleteError?: (errorId: number) => void;
   onAgree?: (errorId: number) => void;
   onDisagree?: (errorId: number) => void;
@@ -184,11 +236,14 @@ export interface SegmentErrorsRightProps {
   onDiscard?: (errorId: number) => void;
   onMarkResolved?: (errorId: number) => void;
   onIgnoreFeedback?: (errorId: number) => void;
-  onAddComment?: (errorId: number) => void;
+  onAddComment?: (errorId: number, comment: string) => void;
+  onAddNewError?: (error: ErrorData) => void;
+  onDeleteNewError?: (errorId: number) => void;
 }
 
 export interface ErrorCardProps {
   error: ErrorData;
+  currentAction?: "accept" | "reject" | "pending";
   onEdit?: () => void;
   onDelete?: () => void;
   onAgree?: () => void;
@@ -197,5 +252,5 @@ export interface ErrorCardProps {
   onDiscard?: () => void;
   onMarkResolved?: () => void;
   onIgnoreFeedback?: () => void;
-  onAddComment?: () => void;
+  onAddComment?: (comment: string) => void;
 }

@@ -11,9 +11,15 @@ import EmptyDashboardIcon from "@/assets/empty-dashboard";
 function stageToRole(stage: string): RoleName {
   const s = stage.toLowerCase().replace(/\s+/g, "_");
   if (s.includes("arbitrat")) return "arbitrator";
-  if (s.includes("reconcil") || s.includes("reviewer2") || s.includes("second"))
+  if (
+    s.includes("reconcil") ||
+    s.includes("reviewer_2") ||
+    s.includes("reviewer2") ||
+    s.includes("second")
+  )
     return "reviewer2";
   if (s.includes("translat")) return "translator";
+  if (s.includes("reviewer_1") || s.includes("reviewer1")) return "reviewer1";
   return "reviewer1";
 }
 

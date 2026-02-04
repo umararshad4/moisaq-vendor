@@ -32,6 +32,11 @@
 
 export { apiClient } from "@/lib/axios-config";
 export { login } from "./auth-service";
+export {
+  setupPassword,
+  setupPasswordRegularUser,
+  setupPasswordClientUser,
+} from "./setup-password-service";
 export { getActiveJobs } from "./vendors-service";
 export {
   getCompletedJobs,
@@ -39,5 +44,16 @@ export {
 } from "./completed-jobs-service";
 export { getNotifications, acceptNotification } from "./notifications-service";
 export { getFirstReviews } from "./first-reviews-service";
+export { getTranslations, submitTranslation } from "./translations-service";
+export {
+  getReviewer2,
+  submitReviewer2,
+  submitReviewer2Job,
+} from "./reviewer2-service";
+export { getArbitrator } from "./arbitrator-service";
 export { getTermBaseMatches } from "./term-base-service";
 export { getFileData } from "./file-data-service";
+export {
+  submitFirstReview,
+  submitFirstReviewJob,
+} from "./submit-first-review-service";

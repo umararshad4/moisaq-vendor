@@ -20,6 +20,7 @@ type NotificationRaw = Record<string, unknown> & {
   target_language?: string;
   stage?: string;
   segments?: number;
+  segment_count?: number;
   total_segments?: number;
 };
 
@@ -38,7 +39,7 @@ function toNewJob(raw: NotificationRaw): NewJob {
     sourceLang: String(sourceLang),
     targetLang: String(targetLang),
     stage: String(raw.stage ?? ""),
-    segments: Number(raw.segments ?? raw.total_segments ?? 0),
+    segments: Number(raw.segment_count ?? raw.segments ?? raw.total_segments ?? 0),
   };
 }
 

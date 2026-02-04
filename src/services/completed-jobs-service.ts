@@ -100,6 +100,14 @@ type CompletedJobDetailSegmentErrorRaw = {
   severity?: string;
   rationale?: string | null;
   comment?: string | null;
+  first_review_action?: string | null;
+  first_review_rationale?: string | null;
+  translator_action?: string | null;
+  translator_comment?: string | null;
+  reviewer2_action?: string | null;
+  reviewer2_comment?: string | null;
+  arbitrator_action?: string | null;
+  arbitrator_comment?: string | null;
 };
 
 type CompletedJobDetailSegmentRaw = {
@@ -162,6 +170,14 @@ function toSegmentError(
     severity: normalizeSeverity(raw.severity),
     rationale: String(raw.rationale ?? ""),
     comment: String(raw.comment ?? ""),
+    firstReviewAction: raw.first_review_action ?? null,
+    firstReviewRationale: raw.first_review_rationale ?? null,
+    translatorAction: raw.translator_action ?? null,
+    translatorComment: raw.translator_comment ?? null,
+    reviewer2Action: raw.reviewer2_action ?? null,
+    reviewer2Comment: raw.reviewer2_comment ?? null,
+    arbitratorAction: raw.arbitrator_action ?? null,
+    arbitratorComment: raw.arbitrator_comment ?? null,
   };
 }
 

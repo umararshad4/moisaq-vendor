@@ -2,7 +2,6 @@
 
 import ActiveJobs from "@/components/dashboard/active-jobs";
 import CompletedJobs from "@/components/dashboard/completed-jobs";
-import EmptyDashboard from "@/components/dashboard/empty-dashboard";
 import NewJobAlert from "@/components/dashboard/new-job-alert";
 import { useActiveJobs } from "@/hooks/use-active-jobs";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -10,8 +9,6 @@ import { useNotifications } from "@/hooks/use-notifications";
 export default function Dashboard() {
   const { data: activeJobs = [], isLoading, isError, error } = useActiveJobs();
   const { data: notifications = [] } = useNotifications();
-
-  const hasActiveJobs = activeJobs.length > 0;
 
   if (isLoading) {
     return (
@@ -29,14 +26,6 @@ export default function Dashboard() {
             ? error.message
             : "Failed to load active jobs"}
         </p>
-      </div>
-    );
-  }
-
-  if (!hasActiveJobs) {
-    return (
-      <div className="flex min-h-screen justify-center bg-white px-8 py-10">
-        <EmptyDashboard />
       </div>
     );
   }

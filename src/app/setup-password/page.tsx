@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/layout/nav-bar";
 import { SetupPasswordForm } from "@/components/setup-password/setup-password-form";
 import { WorkspaceReady } from "@/components/setup-password/workspace-ready";
 
 export default function SetupPasswordPage() {
   const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
+
+  const handleContinue = () => {
+    router.push("/sign-in");
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -15,9 +21,7 @@ export default function SetupPasswordPage() {
         {!isSuccess ? (
           <SetupPasswordForm onSuccess={() => setIsSuccess(true)} />
         ) : (
-          <WorkspaceReady
-            onContinue={() => console.log("Continuing to workspace...")}
-          />
+          <WorkspaceReady onContinue={handleContinue} />
         )}
       </main>
     </div>

@@ -151,6 +151,12 @@ interface ErrorCardReviewer1Props extends ErrorCardProps {
   isAddMode?: boolean;
   onSaveNew?: (error: ErrorData) => void;
   onCancelNew?: () => void;
+  onEditSave?: (updates: {
+    category?: string;
+    severity?: string;
+    rationale?: string;
+  }) => void;
+  currentAction?: "accept" | "reject" | "pending";
 }
 
 export function ErrorCardReviewer1({
@@ -161,6 +167,8 @@ export function ErrorCardReviewer1({
   isAddMode = false,
   onSaveNew,
   onCancelNew,
+  onEditSave,
+  currentAction,
 }: ErrorCardReviewer1Props) {
   const [isEditing, setIsEditing] = useState(isAddMode);
   const [category, setCategory] = useState(() => {
@@ -208,9 +216,9 @@ export function ErrorCardReviewer1({
       );
       setCategory(
         fromOptions ||
-          (error.category && error.subcategory
-            ? `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-").replace(/\//g, "")}`
-            : "")
+        (error.category && error.subcategory
+          ? `${error.category.toLowerCase().replace(/\s+/g, "-")}-${error.subcategory.toLowerCase().replace(/\s+/g, "-").replace(/\//g, "")}`
+          : "")
       );
       setSeverity(error.severity.toLowerCase());
       setRationale(error.rationale);
@@ -235,7 +243,16 @@ export function ErrorCardReviewer1({
       };
       onSaveNew(newError);
     } else {
-      // Save logic here - update the error object
+      // Notify parent of edits
+      if (onEditSave) {
+        const { category: cat, subcategory: subcat } =
+          getCategoryFromValue(category);
+        onEditSave({
+          category: cat && subcat ? `${cat}/${subcat}` : undefined,
+          severity: severity.charAt(0).toUpperCase() + severity.slice(1),
+          rationale,
+        });
+      }
       setIsEditing(false);
     }
   };
@@ -373,13 +390,17 @@ export function ErrorCardReviewer1({
               </button>
               <button
                 onClick={onDiscard}
-                className="flex h-[34px] items-center rounded-lg border border-[#FF383C0F] bg-[#FF383C0F] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#C53F22] transition-colors hover:bg-red-100"
+                disabled={currentAction === "reject"}
+                className={`flex h-[34px] items-center rounded-lg border border-[#FF383C0F] bg-[#FF383C0F] px-3.5 text-[13px] font-medium tracking-[0.03em] text-[#C53F22] transition-colors hover:bg-red-100 ${currentAction === "reject" ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 Discard
               </button>
               <button
                 onClick={onKeep}
-                className="flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F]"
+                disabled={currentAction === "accept"}
+                className={`flex h-[34px] items-center rounded-lg bg-[#1FAA73] px-3.5 text-[13px] font-medium tracking-[0.03em] text-white transition-colors hover:bg-[#19925F] ${currentAction === "accept" ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 Keep
               </button>

@@ -1,12 +1,18 @@
 /**
- * First reviews API service.
- * Endpoint: GET /api/lqa/first-reviews/:jobId/?page=1&page_size=200
+ * Translations API service.
+ * Endpoint: GET /api/lqa/translations/:jobId/?page=1&page_size=200
+ * Submit Endpoint: POST /api/lqa/translations/:jobId/
+ * Submit Job Endpoint: POST /api/lqa/translations/:jobId/submit/
  */
 
 import { apiClient } from "@/lib/axios-config";
+import type {
+  SubmitFirstReviewPayload,
+  SubmitFirstReviewResponse,
+} from "./submit-first-review-service";
 
-/** Raw segment item from first-reviews API (snake_case). */
-export interface FirstReviewSegmentRaw {
+/** Raw segment item from translations API (snake_case). */
+export interface TranslationSegmentRaw {
   id: number | null;
   job: number;
   segment_order: number;
@@ -33,13 +39,16 @@ export interface FirstReviewSegmentRaw {
   error_3_category: string | null;
   error_3_severity: string | null;
   action_3: string | null;
+  comment_1: string | null;
+  comment_2: string | null;
+  comment_3: string | null;
   reviewed_at: string | null;
   created_at?: string;
   updated_at?: string;
 }
 
 /** Normalized segment for UI. */
-export interface FirstReviewSegment {
+export interface TranslationSegment {
   id: number | null;
   jobId: number;
   segmentOrder: number;
@@ -66,28 +75,31 @@ export interface FirstReviewSegment {
   error3Category: string | null;
   error3Severity: string | null;
   action3: string | null;
+  comment1: string | null;
+  comment2: string | null;
+  comment3: string | null;
   reviewedAt: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
 
-/** Job info from first-reviews response. */
-export interface FirstReviewJobInfo {
+/** Job info from translations response. */
+export interface TranslationJobInfo {
   id: number;
   name: string;
   status: string;
   stages: string;
 }
 
-export interface FirstReviewsResponse {
-  results: FirstReviewSegmentRaw[];
+export interface TranslationsResponse {
+  results: TranslationSegmentRaw[];
   next: string | null;
   previous: string | null;
   count: number;
-  job_info: FirstReviewJobInfo;
+  job_info: TranslationJobInfo;
 }
 
-function toFirstReviewSegment(raw: FirstReviewSegmentRaw): FirstReviewSegment {
+function toTranslationSegment(raw: TranslationSegmentRaw): TranslationSegment {
   return {
     id: raw.id,
     jobId: raw.job,
@@ -115,6 +127,9 @@ function toFirstReviewSegment(raw: FirstReviewSegmentRaw): FirstReviewSegment {
     error3Category: raw.error_3_category,
     error3Severity: raw.error_3_severity,
     action3: raw.action_3 ?? null,
+    comment1: raw.comment_1 ?? null,
+    comment2: raw.comment_2 ?? null,
+    comment3: raw.comment_3 ?? null,
     reviewedAt: raw.reviewed_at,
     createdAt: raw.created_at,
     updatedAt: raw.updated_at,
@@ -122,27 +137,27 @@ function toFirstReviewSegment(raw: FirstReviewSegmentRaw): FirstReviewSegment {
 }
 
 /**
- * Fetches first-reviews segments for a job.
+ * Fetches translation segments for a job.
  */
-export async function getFirstReviews(
+export async function getTranslations(
   jobId: string | number,
   page: number = 1,
   pageSize: number = 200
 ): Promise<{
-  segments: FirstReviewSegment[];
-  jobInfo: FirstReviewJobInfo;
+  segments: TranslationSegment[];
+  jobInfo: TranslationJobInfo;
   count: number;
   next: string | null;
   previous: string | null;
 }> {
-  const { data } = await apiClient.get<FirstReviewsResponse>(
-    `/api/lqa/first-reviews/${jobId}/`,
+  const { data } = await apiClient.get<TranslationsResponse>(
+    `/api/lqa/translations/${jobId}/`,
     {
       params: { page, page_size: pageSize },
     }
   );
 
-  const segments = (data.results ?? []).map(toFirstReviewSegment);
+  const segments = (data.results ?? []).map(toTranslationSegment);
 
   return {
     segments,
@@ -151,4 +166,53 @@ export async function getFirstReviews(
     next: data.next ?? null,
     previous: data.previous ?? null,
   };
+}
+
+/**
+ * Submit a translation for a segment.
+ * Endpoint: POST /api/lqa/translations/<job_id>/
+ *
+ * @param jobId - The job ID
+ * @param payload - The translation payload with segment_id, actions and optional edits
+ * @returns Response with segment action and status
+ *
+ * @example
+ * await submitTranslation(353, {
+ *   ai_processing_result_id: 7016,
+ *   segment_id: 1,
+ *   action_1: "accept",
+ *   action_2: "reject"
+ * });
+ */
+export async function submitTranslation(
+  jobId: string | number,
+  payload: SubmitFirstReviewPayload
+): Promise<SubmitFirstReviewResponse> {
+  const { data } = await apiClient.post<SubmitFirstReviewResponse>(
+    `/api/lqa/translations/${jobId}/`,
+    payload
+  );
+
+  return data;
+}
+
+/**
+ * Submit the entire translation job (final submission).
+ * Endpoint: POST /api/lqa/translations/<job_id>/submit/
+ *
+ * @param jobId - The job ID
+ * @returns Response indicating success
+ *
+ * @example
+ * await submitTranslationJob(353);
+ */
+export async function submitTranslationJob(
+  jobId: string | number
+): Promise<{ success: boolean; message: string }> {
+  const { data } = await apiClient.post<{ success: boolean; message: string }>(
+    `/api/lqa/translations/${jobId}/submit/`,
+    {}
+  );
+
+  return data;
 }

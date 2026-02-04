@@ -139,37 +139,41 @@ export function ExpandedSegmentContent({
                       </div>
                     </div>
 
-                    <div>
-                      <label className="text-xs font-medium text-[#667085]">
-                        Comment
-                      </label>
-                      <div className="mt-1 rounded-lg border border-[#081F400A] bg-white px-3 py-2 text-sm text-[#101828]">
-                        {error.comment}
+                    {error.comment && error.comment.trim() && (
+                      <div>
+                        <label className="text-xs font-medium text-[#667085]">
+                          Comment
+                        </label>
+                        <div className="mt-1 rounded-lg border border-[#081F400A] bg-white px-3 py-2 text-sm text-[#101828]">
+                          {error.comment}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="space-y-2">
-                      {error.validations.map((validation) => (
-                        <div
-                          key={validation.type}
-                          className="flex items-start gap-3 px-1 py-1"
-                        >
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#101828] text-xs font-semibold text-white">
-                            {validation.initials}
-                          </div>
-                          <div className="flex-1 space-y-1 rounded-lg border border-[#081F400A]">
-                            <p className="bg-[#EEEFF199] px-4 py-2 text-sm font-medium text-[#101828]">
-                              {validation.type}
-                            </p>
-                            <div className="rounded-lg bg-white px-4 py-2">
-                              <p className="text-sm text-[#667085]">
-                                {validation.content}
+                    {error.validations.length > 0 && (
+                      <div className="space-y-2">
+                        {error.validations.map((validation) => (
+                          <div
+                            key={validation.type}
+                            className="flex items-start gap-3 px-1 py-1"
+                          >
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#101828] text-xs font-semibold text-white">
+                              {validation.initials}
+                            </div>
+                            <div className="flex-1 space-y-1 rounded-lg border border-[#081F400A]">
+                              <p className="bg-[#EEEFF199] px-4 py-2 text-sm font-medium text-[#101828]">
+                                {validation.type}
                               </p>
+                              <div className="rounded-lg bg-white px-4 py-2">
+                                <p className="text-sm text-[#667085]">
+                                  {validation.content}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

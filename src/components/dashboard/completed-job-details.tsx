@@ -64,19 +64,50 @@ export function CompletedJobDetails() {
         | "Translator"
         | "Reviewer Reconciliation"
         | "Arbitrator";
-      const errors = (segment.errors ?? []).map((err) => ({
-        id: err.id,
-        category: err.category,
-        subcategory: "",
-        severity: err.severity as "Major" | "Minor" | "Critical",
-        rationale: err.rationale,
-        comment: err.comment,
-        validations: [] as Array<{
+      const errors = (segment.errors ?? []).map((err) => {
+        const validations: Array<{
           type: ValidationType;
           initials: string;
           content: string;
-        }>,
-      }));
+        }> = [];
+
+        // Add translator comment if available and not empty
+        if (err.translatorComment && err.translatorComment.trim()) {
+          validations.push({
+            type: "Translator",
+            initials: "T",
+            content: err.translatorComment.trim(),
+          });
+        }
+
+        // Add reviewer2 comment if available and not empty
+        if (err.reviewer2Comment && err.reviewer2Comment.trim()) {
+          validations.push({
+            type: "Reviewer Reconciliation",
+            initials: "R2",
+            content: err.reviewer2Comment.trim(),
+          });
+        }
+
+        // Add arbitrator comment if available and not empty
+        if (err.arbitratorComment && err.arbitratorComment.trim()) {
+          validations.push({
+            type: "Arbitrator",
+            initials: "A",
+            content: err.arbitratorComment.trim(),
+          });
+        }
+
+        return {
+          id: err.id,
+          category: err.category,
+          subcategory: "",
+          severity: err.severity as "Major" | "Minor" | "Critical",
+          rationale: err.rationale,
+          comment: err.comment,
+          validations,
+        };
+      });
 
       return {
         id: idNumber,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SegmentErrorsRightProps, ErrorData } from "@/types";
 import { ErrorCardReviewer1 } from "./error-card-reviewer1";
 import { ErrorCardTranslator } from "./error-card-translator";
@@ -11,14 +11,30 @@ import { Plus } from "lucide-react";
 export function SegmentErrorsRight({
   errors,
   roleName,
+  errorActions,
+  onKeep,
+  onDiscard,
+  onEditError,
+  onAddNewError,
+  onDeleteNewError,
+  onAgree,
+  onDisagree,
+  onMarkResolved,
+  onIgnoreFeedback,
+  onAddComment,
 }: SegmentErrorsRightProps) {
   const [errorList, setErrorList] = useState<ErrorData[]>(errors);
+
+  // Update error list when errors prop changes
+  useEffect(() => {
+    setErrorList(errors);
+  }, [errors]);
   const [isAddingError, setIsAddingError] = useState(false);
   const [newError, setNewError] = useState<ErrorData | null>(null);
 
   const handleAction = (action: string, errorId?: number) => {
     console.log(`Action: ${action}`, errorId);
-    // TODO: Implement actual action handlers
+    // TODO: Implement actual action handlers for other roles
   };
 
   const handleAddError = () => {
@@ -41,6 +57,8 @@ export function SegmentErrorsRight({
     setErrorList([...errorList, error]);
     setIsAddingError(false);
     setNewError(null);
+    // Notify parent
+    onAddNewError?.(error);
   };
 
   const handleCancelNewError = () => {
@@ -50,6 +68,8 @@ export function SegmentErrorsRight({
 
   const handleDeleteError = (errorId: number) => {
     setErrorList(errorList.filter((e) => e.id !== errorId));
+    // Notify parent if it's a new error
+    onDeleteNewError?.(errorId);
   };
 
   return (
@@ -61,10 +81,15 @@ export function SegmentErrorsRight({
               <ErrorCardReviewer1
                 key={error.id}
                 error={error}
-                onEdit={() => handleAction("edit", error.id)}
-                onDiscard={() => handleAction("discard", error.id)}
-                onKeep={() => handleAction("keep", error.id)}
+                onDiscard={() => onDiscard?.(error.id)}
+                onKeep={() => onKeep?.(error.id)}
                 onDelete={() => handleDeleteError(error.id)}
+                onEditSave={(updates: {
+                  category?: string;
+                  severity?: string;
+                  rationale?: string;
+                }) => onEditError?.(error.id, updates)}
+                currentAction={errorActions?.[error.id]}
               />
             ))}
             {isAddingError && newError && (
@@ -94,8 +119,10 @@ export function SegmentErrorsRight({
             <ErrorCardTranslator
               key={error.id}
               error={error}
-              onAgree={() => handleAction("agree", error.id)}
-              onDisagree={() => handleAction("disagree", error.id)}
+              currentAction={errorActions?.[error.id]}
+              onAgree={() => onAgree?.(error.id)}
+              onDisagree={() => onDisagree?.(error.id)}
+              onAddComment={(comment) => onAddComment?.(error.id, comment)}
             />
           ))}
         </div>
@@ -107,9 +134,10 @@ export function SegmentErrorsRight({
             <ErrorCardReviewer2
               key={error.id}
               error={error}
-              onEdit={() => handleAction("edit", error.id)}
-              onDiscard={() => handleAction("discard", error.id)}
-              onKeep={() => handleAction("keep", error.id)}
+              currentAction={errorActions?.[error.id]}
+              onAgree={() => onAgree?.(error.id)}
+              onDisagree={() => onDisagree?.(error.id)}
+              onAddComment={(comment) => onAddComment?.(error.id, comment)}
             />
           ))}
         </div>
@@ -121,10 +149,11 @@ export function SegmentErrorsRight({
             <ErrorCardArbitrator
               key={error.id}
               error={error}
+              currentAction={errorActions?.[error.id]}
               onEdit={() => handleAction("edit", error.id)}
-              onMarkResolved={() => handleAction("markResolved", error.id)}
-              onIgnoreFeedback={() => handleAction("ignoreFeedback", error.id)}
-              onAddComment={() => handleAction("addComment", error.id)}
+              onMarkResolved={() => onMarkResolved?.(error.id)}
+              onIgnoreFeedback={() => onIgnoreFeedback?.(error.id)}
+              onAddComment={(comment) => onAddComment?.(error.id, comment)}
             />
           ))}
         </div>

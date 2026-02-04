@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, Plus } from "lucide-react";
 import { ErrorCardProps } from "@/types";
 import { Textarea } from "@/components/ui/textarea";
 
 export function ErrorCardTranslator({
   error,
+  currentAction,
   onAgree,
   onDisagree,
+  onAddComment,
 }: ErrorCardProps) {
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [comment, setComment] = useState(error.comment || "");
@@ -16,17 +18,41 @@ export function ErrorCardTranslator({
     "agree" | "disagree" | null
   >(null);
 
+  // Reset state when error changes (e.g., navigating to a new segment)
+  useEffect(() => {
+    setComment(error.comment || "");
+    setIsAddingComment(false);
+    // Initialize selectedAction from currentAction prop
+    if (currentAction === "accept") {
+      setSelectedAction("agree");
+    } else if (currentAction === "reject") {
+      setSelectedAction("disagree");
+    } else {
+      setSelectedAction(null);
+    }
+  }, [error.id, error.comment, currentAction]);
+
   const handleCancelComment = () => {
     setComment(error.comment || "");
     setIsAddingComment(false);
   };
 
   const handleAddComment = () => {
-    // Save comment logic here
+    const trimmed = comment.trim();
+    if (!trimmed) {
+      return;
+    }
+    onAddComment?.(trimmed);
+    setComment(trimmed);
     setIsAddingComment(false);
   };
 
   const handleDisagree = () => {
+    // Require a comment before disagreeing
+    if (!comment.trim()) {
+      setIsAddingComment(true);
+      return;
+    }
     setSelectedAction("disagree");
     if (onDisagree) {
       onDisagree();

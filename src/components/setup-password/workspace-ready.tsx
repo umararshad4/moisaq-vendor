@@ -27,7 +27,7 @@ export function WorkspaceReady({ onContinue }: WorkspaceReadyProps) {
         onClick={onContinue}
         className="h-12 w-full rounded-xl bg-[#27ae60] text-base font-medium text-white shadow-none hover:bg-[#219150]"
       >
-        Continue to workspace
+        Continue
       </Button>
     </div>
   );
