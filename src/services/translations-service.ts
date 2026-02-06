@@ -11,6 +11,12 @@ import type {
   SubmitFirstReviewResponse,
 } from "./submit-first-review-service";
 
+// Re-export types for consumers
+export type {
+  SubmitFirstReviewPayload,
+  SubmitFirstReviewResponse,
+};
+
 /** Raw segment item from translations API (snake_case). */
 export interface TranslationSegmentRaw {
   id: number | null;
