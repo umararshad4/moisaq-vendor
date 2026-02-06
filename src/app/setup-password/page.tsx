@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/layout/nav-bar";
 import { SetupPasswordForm } from "@/components/setup-password/setup-password-form";
@@ -19,7 +19,9 @@ export default function SetupPasswordPage() {
       <NavBar isAuthenticated={false} />
       <main className="flex flex-1 items-center justify-center p-4">
         {!isSuccess ? (
-          <SetupPasswordForm onSuccess={() => setIsSuccess(true)} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SetupPasswordForm onSuccess={() => setIsSuccess(true)} />
+          </Suspense>
         ) : (
           <WorkspaceReady onContinue={handleContinue} />
         )}

@@ -59,7 +59,7 @@ function segmentToErrorData(
   seg: FirstReviewSegment | TranslationSegment | Reviewer2Segment | ArbitratorSegment
 ): ErrorData[] {
   const errors: ErrorData[] = [];
-  
+
   // Helper to get translator comment for translator, reviewer2 and arbitrator segments
   const getTranslatorComment = (index: 1 | 2 | 3): string | null | undefined => {
     if ("translatorComment1" in seg) {
@@ -148,7 +148,7 @@ function segmentToErrorData(
   items.forEach(({ cat, sev, rationale, translatorComment, reviewer2Comment }, i) => {
     if (cat && sev) {
       const { category, subcategory } = parseCategorySubcategory(cat);
-      
+
       // Determine the comment field based on segment type
       // - For translator segments: use translator's own comment
       // - For reviewer2 segments: use reviewer2's own comment  
@@ -168,7 +168,7 @@ function segmentToErrorData(
         const arbitratorSeg = seg as ArbitratorSegment;
         ownComment = (i === 0 ? arbitratorSeg.comment1 : i === 1 ? arbitratorSeg.comment2 : arbitratorSeg.comment3) ?? "";
       }
-      
+
       errors.push({
         id: i + 1,
         category,
